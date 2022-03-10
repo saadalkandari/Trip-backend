@@ -10,17 +10,22 @@ const dotenv = require("dotenv");
 const TripRoutes = require("./api/trips/routes");
 
 const app = express();
+app.use((req, res, next) => {
+  console.log(
+    `${req.method} ${req.protocol}://${req.get("host")}${req.originalUrl}`
+  );
+  next();
+});
 // app.use(express.json());
 app.use(passport.initialize());
 passport.use(localStrategy);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Routes
-app.use("/api/", userRoutes);
-
 app.use(express.urlencoded({ extended: true }));
 //// Routes
+app.use("/api/", userRoutes);
 app.use("/api/trips", TripRoutes);
+app.use("/api/media", express.static(path.join(__dirname, "media")));
 
 app.listen(8000, () => {
   console.log("The application is running on localhost:8000");
