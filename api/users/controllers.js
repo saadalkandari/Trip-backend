@@ -12,7 +12,7 @@ exports.signup = async (req, res, next) => {
 
     const newUser = await User.create(req.body);
     const payload = {
-      _id: newUser._id,
+      id: newUser._id,
       username: newUser.username,
       exp: Date.now() + JWT_EXPIRATION_MS,
     };
@@ -23,21 +23,32 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.createTrip = async (req, res, next) => {
-  try {
-    if (req.file) {
-      req.body.image = `/${req.file.path}`;
-      req.body.image = req.body.image.replace("\\", "/");
+exports.signin = (req, res, next) => {
+  const user = req.user;
+  const payload = {
+    id: user._id,
+    username: user.username,
+    exp: Date.now() + JWT_EXPIRATION_MS,
+  };
+  const token = jwt.sign(JSON.stringify(payload), JWT_SECRET);
+  res.status(201).json({ token });
+
+  exports.createTrip = async (req, res, next) => {
+    try {
+      if (req.file) {
+        req.body.image = `/${req.file.path}`;
+        req.body.image = req.body.image.replace("\\", "/");
+      }
+      const { userId } = req.params;
+      req.body.user = userId;
+      const newTrip = await Trip.create(req.body);
+      await User.findOneAndUpdate(
+        { _id: userId },
+        { $push: { trips: newTrip._id } }
+      );
+      return res.status(201).json(newTrip);
+    } catch (error) {
+      next(error);
     }
-    const { userId } = req.params;
-    req.body.user = userId;
-    const newTrip = await Trip.create(req.body);
-    await User.findOneAndUpdate(
-      { _id: userId },
-      { $push: { trips: newTrip._id } }
-    );
-    return res.status(201).json(newTrip);
-  } catch (error) {
-    next(error);
-  }
+  };
 };

@@ -2,7 +2,8 @@ const express = require("express");
 const userRoutes = require("./api/users/routers");
 const bodyParser = require("body-parser");
 const connectDB = require("./database");
-
+const passport = require("passport");
+const { localStrategy } = require("./middleware/passport");
 connectDB();
 const path = require("path");
 const dotenv = require("dotenv");
@@ -16,6 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 // app.use(express.json());
+app.use(passport.initialize());
+passport.use(localStrategy);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
