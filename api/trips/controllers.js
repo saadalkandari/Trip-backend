@@ -26,3 +26,37 @@ exports.deleteTrip = async (req, res, next) => {
     next(error);
   }
 };
+
+// exports.updateTrip = async (req, res, next) => {
+//   try {
+//     if (req.file) {
+//       req.body.image = `/${req.file.path}`;
+//     }
+//     const id = req.trip.id;
+//     const trip = req.body;
+//     const updatedTrip = await Trip.findByIdAndUpdate(id, trip, {
+//       runValidators: true,
+//       new: true,
+//     });
+//     res.status(200).json({
+//       msg: "trip Updated",
+//       payload: updatedTrip,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+exports.updateTrip = async (req, res, next) => {
+  try {
+    const tripId = req.trip._id;
+    const updateTrip = await Trip.findByIdAndUpdate({ _id: tripId }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json(updateTrip);
+  } catch (error) {
+    //res.status(500).json({ msg: error.message });
+    next(error);
+  }
+};
