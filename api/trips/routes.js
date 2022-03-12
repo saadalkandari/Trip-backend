@@ -1,5 +1,12 @@
 const express = require("express");
-const { fetchTrips, deleteTrip, fetchTrip } = require("./controllers");
+const passport = require("passport");
+const upload = require("../../middleware/multer");
+const {
+  fetchTrips,
+  deleteTrip,
+  fetchTrip,
+  updateTrip,
+} = require("./controllers");
 
 const router = express.Router();
 
@@ -17,5 +24,12 @@ router.param("tripId", async (req, res, next, tripId) => {
 
 router.get("/", fetchTrips);
 router.delete("/:tripId", deleteTrip);
+router.put("/:tripId", upload.single("image"), updateTrip);
+// router.put(
+//   "/:tripId",
+//   passport.authenticate("jwt", { session: false }),
+//   upload.single("image"),
+//   updateTrip
+// );
 
 module.exports = router;
