@@ -1,5 +1,11 @@
 const express = require("express");
-const { fetchTrips, deleteTrip, fetchTrip } = require("./controllers");
+const upload = require("../../middleware/multer");
+const {
+  fetchTrips,
+  deleteTrip,
+  fetchTrip,
+  createTrip,
+} = require("./controllers");
 
 const router = express.Router();
 
@@ -17,5 +23,5 @@ router.param("tripId", async (req, res, next, tripId) => {
 
 router.get("/", fetchTrips);
 router.delete("/:tripId", deleteTrip);
-
+router.post("/", upload.single("image"), createTrip);
 module.exports = router;

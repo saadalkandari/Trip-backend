@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 //// Routes
-app.use("/api/", userRoutes);
+app.use("/api", userRoutes);
 app.use("/api/trips", TripRoutes);
 app.use("/api/media", express.static(path.join(__dirname, "media")));
 
