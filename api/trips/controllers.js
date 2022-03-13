@@ -27,6 +27,25 @@ exports.deleteTrip = async (req, res, next) => {
   }
 };
 
+exports.createTrip = async (req, res, next) => {
+  try {
+    console.log(req.body.image);
+    if (req.file) {
+      req.body.image = `/${req.file.path}`;
+      req.body.image = req.body.image.replace("\\", "/");
+    }
+    // const { userId } = req.params;
+    // req.body.user = userId;
+    console.log(req.body);
+    const newTrip = await Trip.create(req.body);
+    // await User.findOneAndUpdate(
+    //   { _id: userId },
+    //   { $push: { trips: newTrip._id } }
+    // );
+    return res.status(201).json(newTrip);
+  } catch (error) {
+
+
 // exports.updateTrip = async (req, res, next) => {
 //   try {
 //     if (req.file) {
@@ -57,6 +76,7 @@ exports.updateTrip = async (req, res, next) => {
     res.status(200).json(updateTrip);
   } catch (error) {
     //res.status(500).json({ msg: error.message });
+
     next(error);
   }
 };
