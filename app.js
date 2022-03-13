@@ -1,5 +1,6 @@
 const express = require("express");
 const userRoutes = require("./api/users/routers");
+const TripRoutes = require("./api/trips/routes");
 const bodyParser = require("body-parser");
 const connectDB = require("./database");
 const passport = require("passport");
@@ -7,7 +8,6 @@ const { localStrategy } = require("./middleware/passport");
 connectDB();
 const path = require("path");
 const dotenv = require("dotenv");
-const TripRoutes = require("./api/trips/routes");
 
 const app = express();
 app.use((req, res, next) => {
